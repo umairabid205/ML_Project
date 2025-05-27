@@ -6,6 +6,8 @@ import sys
 import dill
 from src.exception import CustomException
 from src.logger import logging
+from sklearn.metrics import r2_score, accuracy_score
+
 
 
 
@@ -34,4 +36,23 @@ def save_object(file_path, obj):
     
     except Exception as e:
         raise CustomException(e,sys)
+    
+
+    
+def evaluate_model(X_train, y_train, X_test, y_test, models):
+    from sklearn.metrics import r2_score
+    import numpy as np
+
+    model_report = {}
+    for model_name, model in models.items():
+        try:
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            score = r2_score(y_test, y_pred)
+            model_report[model_name] = score
+        except Exception as e:
+            # Log or print the error for debugging
+            print(f"Model {model_name} failed: {e}")
+            model_report[model_name] = None  # or np.nan
+    return model_report
   
