@@ -4,6 +4,7 @@
 import os
 import sys
 import dill
+import pickle
 from src.exception import CustomException
 from src.logger import logging
 from sklearn.metrics import r2_score, accuracy_score
@@ -62,4 +63,13 @@ def evaluate_model(X_train, y_train, X_test, y_test, models,params):
             print(f"Model {model_name} failed: {e}")
             model_report[model_name] = None  # or np.nan
     return model_report
+
+
+def load_object(file_path): 
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
   
